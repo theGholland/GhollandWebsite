@@ -1,0 +1,347 @@
+
+<!-- saved from url=(0260)https://1939000268-atari-embeds.googleusercontent.com/embeds/16cb204cf3a9d4d223a0a3fd8b0eec5d/inner-frame-minified.html?jsh=m%3B%2F_%2Fscs%2Fabc-static%2F_%2Fjs%2Fk%3Dgapi.lb.en.iFs_Bhrqdio.O%2Fd%3D1%2Frs%3DAHpOoo-IvlQWaLHZdUKQFbafXd_3OEvU9Q%2Fm%3D__features__ -->
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8"><!--<base target="_blank">--><base href="." target="_blank">
+<link rel="stylesheet" href="./bootstrap.min.css">
+
+<style>
+  /* Authored by Galen Holland */
+  .row {
+	display: flex;
+	align-items: left;
+	justify-content: center;
+  }
+  .output {
+    font-family: monospace;
+    font-size: 16px;
+    padding: 0px;
+    margin: 20px;
+  }
+
+  .subsubtitle {
+    font-family: monospace;
+    font-size: 12px;
+    padding: 0px;
+    margin: 5px;
+	float: none;
+  }
+  
+  .subsubsubtitle {
+    font-family: Trebuchet MS, sans-serif;
+    font-size: 24px;
+    padding: 20px;
+    margin: 0px;
+  }
+  
+  .foursubtitle {
+    font-family: monospace;
+    font-size: 12px;
+    padding: 0px;
+    margin: 10px;
+    background-color: #eee;
+    border: 1px solid #ccc;
+  }
+  
+  .title {
+    font-family: Trebuchet MS, sans-serif;
+    font-size: 32px;
+    padding: 5px;
+    margin: 5px;
+	text-align: center;
+  }
+  
+  .subtitle {
+    font-family: Trebuchet MS, sans-serif;
+    font-size: 20px;
+    padding: 5px;
+    margin: 5px;
+  }
+
+  /* Define a CSS class for the buttons */
+  .btn {
+    padding: 10px 20px;
+    margin: 10px;
+    font-size: 16px;
+	background-color: #ad7755;
+	border: 2px solid #ad7755;
+    text-align: center;
+  }
+  
+  .btn:hover {
+    background-color: #8f6246; /* Green */
+	border: 2px solid #8f6246;
+    color: white;
+  }
+
+  .playerhistory {
+	font-size: 16px;
+    padding: 10px;
+    margin: 10px;
+    background-color: #eee;
+    border: 1px solid #ccc;
+	text-align: center;
+  }
+  
+  @media (max-width: 1200px) {
+    .title {
+      font-size: 24px;
+    }
+    .btn {
+      font-size: 12px; 
+    }
+	.subsubtitle {
+	  font-size: 16px;
+	}
+  }
+  @media (max-width: 1000px) {
+    .title {
+      font-size: 20px;
+    }
+    .subsubsubtitle {
+      font-size: 18px;
+    }
+    .output {
+      font-size: 14px;
+    }
+    .btn {
+      font-size: 8px; 
+	  margin: 5px;
+    }
+    .playerhistory {
+      font-size: 10px;
+    }
+	.subsubtitle {
+	  font-size: 14px;
+	}
+	.foursubtitle {
+	  font-size: 10;
+	  margin: 5;
+	}
+  }
+
+</style>
+
+  
+  
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+
+  <link rel="stylesheet" href="./pyscript.css">
+  <script defer="" src="./pyscript.js.download"></script>
+  </head>
+  
+  <body><div class="container">
+	<div class="row">
+		<div class="col-7">
+			<!-- Use the output class for the output elements -->
+			<div id="outputDiv" class="title"></div>
+			<div id="outputDiv2" class="subtitle"></div>
+			<div id="manual-write" class="output"></div>
+			<div id="manual-write2" class="output"></div>
+			<div id="manual-write3" class="output"></div>
+		
+			<!-- Use the btn and btn-primary classes for the buttons -->
+			<div class="row">
+				<button py-click="write_to_page(-1)" id="manual" class="btn btn-primary">Rock: -1</button>
+				<button py-click="write_to_page(0)" id="manual" class="btn btn-primary">Paper: 0</button>
+				<button py-click="write_to_page(1)" id="manual" class="btn btn-primary">Scissors: 1</button>
+				<button py-click="show_predict(movehistory)" id="manual" class="btn btn-primary">Show Computer Prediction</button>
+			</div>
+			
+			<!-- Use the playerhistory class for the playerhistory element -->
+			<div id="playerhistory" class="playerhistory"><b>Player Move | History | Computer Prediction</b></div>
+			<div id="computerlearning" class="output"></div>
+		</div>
+		<div class="col-4">
+			<div id="status" class="subsubtitle">####</div>
+			<div id="irrelevant" class="subsubsubtitle">Weights and Biases:</div>
+			<div id="weightsNbiases" class="foursubtitle"></div>
+		</div>
+	</div>
+  </div>
+  
+  
+    <py-config>
+      packages = ["numpy"]
+    </py-config>
+    <py-script>
+		import asyncio
+		import numpy as np
+		
+		class NeuralNetwork:
+			def __init__(self, learning_rate):
+				self.weights1 = np.random.randn(6)
+				self.bias1 = np.random.randn()
+				self.learning_rate = learning_rate
+		
+			def _activationfunc(self, x): #activation function is tanh
+				return (2/(1 + np.exp(-2 * x)) - 1)
+		
+			def _activationfunc_deriv(self, x):
+				return (1 - (2/(1 + np.exp(-2 * x)) - 1) ** 2)
+		
+			def predict(self, input_vector1):
+				layer_1 = np.dot(input_vector1, self.weights1) + self.bias1
+				prediction = self._activationfunc(layer_1)
+				return prediction
+		
+			def _compute_gradients(self, input_vector1, target):
+				layer_1 = np.dot(input_vector1, self.weights1) + self.bias1
+				prediction = self._activationfunc(layer_1)
+		
+				derror_dprediction = 2 * (prediction - target) 
+				dprediction_dlayer1 = self._activationfunc_deriv(layer_1)
+		
+				dlayer1_dbias1 = 1
+				dlayer1_dweights1 = (0 * self.weights1) + (1 * input_vector1)
+			
+				derror_dbias1 = (derror_dprediction * dprediction_dlayer1 * dlayer1_dbias1)
+				derror_dweights1 = (derror_dprediction * dprediction_dlayer1 * dlayer1_dweights1)
+			
+				return derror_dbias1, derror_dweights1
+			
+			def _update_parameters(self, derror_dbias1, derror_dweights1, learning_rate):
+				self.learning_rate = learning_rate
+				self.bias1 = self.bias1 - (derror_dbias1 * self.learning_rate)
+				self.weights1 = self.weights1 - (derror_dweights1 * self.learning_rate)
+		
+				return self.weights1, self.bias1 
+				
+		#############################################################		
+		
+		count = 0
+		movehistory = [-0.3, 0.7, 0, -1.3, -0.3, -1] #create some fake data for the first load 
+		learning_rate = 0.35 #0.35 is a good value 
+		neural_network = NeuralNetwork(learning_rate) #initialize NN
+		values = 'not yet computed' #for development 
+		
+		###########################################################################################
+		def adjustedrounding(value): #create custom rounding function to split the set of (-1,1) evenly into three sections 
+			if value &gt; 0.3333333:
+				return 1
+			elif value &lt; -0.3333333:
+				return -1 
+			else: 
+				return 0
+		
+		def determinewinner(pmove, cmove):
+			moves = ["Paper", "Scissors", "Rock"]
+			Element("manual-write").element.innerText = f'{moves[pmove]} versus...'
+			Element("manual-write2").element.innerText = f'computer chose... {moves[(cmove+1)%3]}!'
+			if pmove == cmove:
+				Element("manual-write3").element.innerText = 'COMPUTER WIN!'
+				return False
+			elif (pmove+1) == (cmove+3)%3:
+				Element("manual-write3").element.innerText = 'PLAYER WIN!'
+				return True
+			else:
+				Element("manual-write3").element.innerText = 'TIE GAME!'
+				return
+		
+		def clearpage(r):
+			Element("manual-write").element.innerText = r
+			Element("manual-write2").element.innerText = r
+			Element("manual-write3").element.innerText = r
+		
+		def updatemovehist(history, move):
+			history.append(move)
+			if len(history) &gt; 6:
+				history.pop(0)
+		
+		def write_to_page(rps):
+			moves = ["Paper", "Scissors", "Rock"]
+			Element("status").element.innerText = moves[rps]
+			write_to_page.move = rps
+			return 
+		
+		def show_predict(movehistory):
+			cpred = adjustedrounding(neural_network.predict(movehistory))
+			moves = ["Paper", "Scissors", "Rock"]
+			Element("status").element.innerText = f"Computer's Guess: {moves[cpred]}"
+			return
+		############################################################################################
+		
+		async def foo():
+			clearpage('#############')
+			count = 0
+			i = 0
+			moves = ["Paper", "Scissors", "Rock"]
+			
+			while i &lt; 9: #do some practice rounds 
+				Element("outputDiv").element.innerHTML = '<p><b>Play some practice rounds!</b></p>'
+				Element('outputDiv2').element.innerText = f'Computer Practice Win Ratio: {round(float(count / (i+1))*100, 1)}%'
+				await asyncio.sleep(0.5)
+				
+				if write_to_page.move != 3: 
+					playerMove = write_to_page.move
+					computermove = adjustedrounding(neural_network.predict(movehistory))
+					learning_rate = (i+1)/10 #increase learning rate to a high amount over practice time so it converges faster 
+					display(f'{moves[playerMove]} at [{playerMove}] | {movehistory} | Went {moves[(computermove + 1)%3]}, guessing [{computermove}]', target='playerhistory')
+					clearpage('#############')
+					await asyncio.sleep(0.1)
+					didplayerwin = determinewinner(playerMove, computermove)
+					
+					if didplayerwin == True:
+						Element("status").element.innerText = 'Adjusting Weights Until Correct Solution...'
+						j=0
+						while j &lt; 1000:
+							LR = learning_rate 
+							derror_dbias1, derror_dvalues1 = neural_network._compute_gradients(movehistory, playerMove) #compute gradients using player's practice move 
+							await asyncio.sleep(0.01) #so each new weight is displayed for a cool effect 
+							Element("weightsNbiases").element.innerText = f"{derror_dvalues1}\n{derror_dbias1}" 
+							neural_network._update_parameters(derror_dbias1, derror_dvalues1, LR) #descend gradients 
+							predict = neural_network.predict(movehistory)
+							computermove = adjustedrounding(predict)
+							display(f"Computer Prediction: {round(predict, 14)} | Target: {playerMove}", target='computerlearning')
+							if computermove == playerMove:
+								break
+							j +=1
+						Element("status").element.innerText = 'Adjusting Weights Until Correct Solution... Done!'
+						if j == 1000:
+							Element("status").element.innerText = 'Adjusting Weights Until Correct Solution... Failed!'
+						playerMove += 0.3
+					elif didplayerwin == False:
+						count += 1
+						playerMove -= 0.3
+
+					updatemovehist(movehistory, playerMove) #update the move history
+					i += 1
+					write_to_page.move = 3
+					Element('status').element.innerText = 'Move History Updated!'
+			
+			i = 0
+			count = 0
+			while True: 
+				Element("outputDiv").element.innerHTML = '<p><b>Now for the real match!</b></p>'
+				Element('outputDiv2').element.innerText = f'Computer Win Ratio: {round(float(count / (i+1))*100, 1)}%'
+				await asyncio.sleep(0.5)
+
+				if write_to_page.move != 3: 
+					await asyncio.sleep(1)
+					playerMove = write_to_page.move
+					computermove = adjustedrounding(neural_network.predict(movehistory))
+					display(f'{moves[playerMove]} at [{playerMove}] | {movehistory} | Went {moves[(computermove + 1)%3]}, guessing [{computermove}]', target='playerhistory')
+					clearpage('#############')
+					await asyncio.sleep(0.1)
+					didplayerwin = determinewinner(playerMove, computermove)
+					
+					if didplayerwin == False:
+						playerMove -= 0.3
+						learning_rate = 0.4
+						count += 1
+					elif didplayerwin == True: 
+						derror_dbias1, derror_dvalues1 = neural_network._compute_gradients(movehistory, playerMove)
+						Element("weightsNbiases").element.innerText = f"{derror_dvalues1}\n{derror_dbias1}" #allows me to print current weight values  
+						neural_network._update_parameters(derror_dbias1, derror_dvalues1, learning_rate)
+						learning_rate = 0.8
+						playerMove += 0.3
+						
+					updatemovehist(movehistory, playerMove) #update the move history
+					i += 1
+					write_to_page.move = 3
+					Element('status').element.innerText = 'Move History Updated!'
+
+		write_to_page.move = 3
+		pyscript.run_until_complete(foo())
+
+    </py-script>
+  
+</body></html>
