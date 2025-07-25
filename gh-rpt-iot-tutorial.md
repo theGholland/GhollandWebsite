@@ -1,5 +1,6 @@
-yout: default
-title: GH - RPT IoT Tutorial
+---
+layout: default
+title: GH - RPT IoT Tutorial
 permalink: /rpt-iot-tutorial/
 ---
 

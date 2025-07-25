@@ -1,5 +1,6 @@
-yout: default
-title: GH - Texas Hold'em Bot
+---
+layout: default
+title: GH - Texas Hold'em Bot
 permalink: /texas-holdem-bot/
 ---
 

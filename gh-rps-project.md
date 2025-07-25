@@ -1,5 +1,6 @@
-yout: default
-title: GH - RPS Project
+---
+layout: default
+title: GH - RPS Project
 permalink: /rps-project/
 ---
 

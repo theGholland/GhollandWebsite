@@ -1,4 +1,5 @@
-yout: default
+---
+layout: default
 title: GH - Results
 permalink: /results/
 ---

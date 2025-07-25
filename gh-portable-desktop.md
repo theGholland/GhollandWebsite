@@ -1,5 +1,6 @@
-yout: default
-title: GH - Portable Desktop
+---
+layout: default
+title: GH - Portable Desktop
 permalink: /portable-desktop/
 ---
 

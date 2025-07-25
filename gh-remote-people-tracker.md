@@ -1,5 +1,6 @@
-yout: default
-title: GH - Remote People Tracker
+---
+layout: default
+title: GH - Remote People Tracker
 permalink: /remote-people-tracker/
 ---
 
