@@ -4,4 +4,4 @@ title: GH
 permalink: /
 ---
 
-{% include_relative ghollandwebsite/GH.html %}
+{% include_relative ghollandwebsite/GH.html %} 
