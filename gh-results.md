@@ -4,4 +4,4 @@ title: GH - Results
 permalink: /results/
 ---
 
-{% raw %}{% include_relative ghollandwebsite/GH - Results.html %}{% endraw %}
+{% include_relative ghollandwebsite/GH - Results.html %}
